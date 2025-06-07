@@ -1,3 +1,4 @@
+import os
 import sys
 import traceback
 from pathlib import Path
@@ -35,10 +36,28 @@ recognized_datasets = [
     "VoxCeleb2/dev/aac",
     "VoxCeleb2/test/aac",
     "VCTK-Corpus/wav48",
+    "dysarthia-torgo",
+    "copy",
+    "UASPEECH_MAN",
+    "UASPEECH_MAN_HEALTHY",
+    "UASPEECH_MAN_SICK",
+    "UASPEECH_WOMAN",
+    "UASPEECH_WOMAN_HEALTHY",
+    "UASPEECH_WOMAN_SICK",
+    "UASPEECH_MERGED_MAN",
+    "UASPEECH_MERGED_MAN_HEALTHY",
+    "UASPEECH_MERGED_MAN_SICK",
+    "UASPEECH_MERGED_WOMAN",
+    "UASPEECH_MERGED_WOMAN_HEALTHY",
+    "UASPEECH_MERGED_WOMAN_SICK",
+    "male",
+    "female",
+    "RAVDESS_MAN",
+    "RAVDESS_WOMAN",
 ]
 
 # Maximum of generated wavs to keep on memory
-MAX_WAVS = 15
+MAX_WAVS = 30
 
 
 class Toolbox:
@@ -74,6 +93,8 @@ class Toolbox:
     def setup_events(self):
         # Dataset, speaker and utterance selection
         self.ui.browser_load_button.clicked.connect(lambda: self.load_from_browser())
+        self.ui.browser_load_speaker_button.clicked.connect(lambda: self.load_speaker_from_browser())
+        self.ui.browser_load_all_button.clicked.connect(lambda: self.load_all_from_browser())
         random_func = lambda level: lambda: self.ui.populate_browser(self.datasets_root,
                                                                      recognized_datasets,
                                                                      level)
@@ -159,6 +180,50 @@ class Toolbox:
 
         self.add_real_utterance(wav, name, speaker_name)
 
+    def load_speaker_from_browser(self):
+        fpaths = Path(self.datasets_root,
+                    self.ui.current_dataset_name,
+                    self.ui.current_speaker_name)
+        
+        for f in os.listdir(fpaths):
+            fpath = Path(fpaths, f)
+            try:
+                print(fpath)
+                name = str(fpath.relative_to(self.datasets_root))
+                speaker_name = self.ui.current_dataset_name + '_' + self.ui.current_speaker_name
+
+                # Get the wav from the disk. We take the wav with the vocoder/synthesizer format for
+                # playback, so as to have a fair comparison with the generated audio
+                wav = Synthesizer.load_preprocess_wav(fpath)
+
+                self.add_real_utterance(wav, name, speaker_name)
+            except:
+                print(f"{fpath} is corrupted")
+            
+    def load_all_from_browser(self):
+        dataset_path = Path(self.datasets_root,
+                    self.ui.current_dataset_name)
+        
+        for speaker_paths in os.listdir(dataset_path):
+            speaker_path = Path(dataset_path, speaker_paths)
+            for f in os.listdir(speaker_path):
+                fpath = Path(speaker_path, f)
+                try:
+                    print(fpath)
+                    name = str(fpath.relative_to(self.datasets_root))
+                    speaker_name = f"{self.ui.current_dataset_name}_{speaker_paths}"
+
+                    # Get the wav from the disk. We take the wav with the vocoder/synthesizer format for
+                    # playback, so as to have a fair comparison with the generated audio
+                    wav = Synthesizer.load_preprocess_wav(fpath)
+
+                    self.add_real_utterance(wav, name, speaker_name)
+                    # This could be used to automaticly load the audio and sythesize and vocode base on the text box
+                    # self.synthesize()
+                    # self.vocode()
+                except:
+                    print(f"{fpath} is corrupted")
+
     def record(self):
         wav = self.ui.record_one(encoder.sampling_rate, 5)
         if wav is None:
@@ -217,7 +282,13 @@ class Toolbox:
         specs = self.synthesizer.synthesize_spectrograms(texts, embeds)
         breaks = [spec.shape[1] for spec in specs]
         spec = np.concatenate(specs, axis=1)
+        max_duration_sec = 10.0
+        sampling_rate = 16000
+        hop_length = 200
+        max_frames = int((max_duration_sec * sampling_rate) / hop_length)
 
+        if spec.shape[1] > max_frames:
+            spec = spec[:, :max_frames]
         self.ui.draw_spec(spec, "generated")
         self.current_generated = (self.ui.selected_utterance.speaker_name, spec, breaks, None)
         self.ui.set_loading(0)

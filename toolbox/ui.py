@@ -4,6 +4,8 @@ from time import sleep
 from typing import List, Set
 from warnings import filterwarnings, warn
 
+import matplotlib
+from matplotlib.lines import Line2D
 import matplotlib.pyplot as plt
 import numpy as np
 import sounddevice as sd
@@ -34,20 +36,33 @@ colormap = np.array([
     [0, 0, 0],
     [183, 183, 183],
     [76, 255, 0],
+    [128, 0, 0],
+    [0, 128, 0],
+    [0, 0, 128],
+    [128, 128, 0],
+    [128, 0, 128],
+    [0, 128, 128],
+    [192, 192, 192],
+    [255, 105, 180],
+    [139, 69, 19],
+    [70, 130, 180],
+    [210, 105, 30],
 ], dtype=np.float) / 255
 
 default_text = \
-    "Welcome to the toolbox! To begin, load an utterance from your datasets or record one " \
-    "yourself.\nOnce its embedding has been created, you can synthesize any text written here.\n" \
-    "The synthesizer expects to generate " \
-    "outputs that are somewhere between 5 and 12 seconds.\nTo mark breaks, write a new line. " \
-    "Each line will be treated separately.\nThen, they are joined together to make the final " \
-    "spectrogram. Use the vocoder to generate audio.\nThe vocoder generates almost in constant " \
-    "time, so it will be more time efficient for longer inputs like this one.\nOn the left you " \
-    "have the embedding projections. Load or record more utterances to see them.\nIf you have " \
-    "at least 2 or 3 utterances from a same speaker, a cluster should form.\nSynthesized " \
-    "utterances are of the same color as the speaker whose voice was used, but they're " \
-    "represented with a cross."
+    "The quick brown fox jumps over the lazy dog. " \
+    "How much wood would a woodchuck chuck if a woodchuck could chuck wood?" \
+    # "Welcome to the toolbox! To begin, load an utterance from your datasets or record one " \
+    # "yourself.\nOnce its embedding has been created, you can synthesize any text written here.\n" \
+    # "The synthesizer expects to generate " \
+    # "outputs that are somewhere between 5 and 12 seconds.\nTo mark breaks, write a new line. " \
+    # "Each line will be treated separately.\nThen, they are joined together to make the final " \
+    # "spectrogram. Use the vocoder to generate audio.\nThe vocoder generates almost in constant " \
+    # "time, so it will be more time efficient for longer inputs like this one.\nOn the left you " \
+    # "have the embedding projections. Load or record more utterances to see them.\nIf you have " \
+    # "at least 2 or 3 utterances from a same speaker, a cluster should form.\nSynthesized " \
+    # "utterances are of the same color as the speaker whose voice was used, but they're " \
+    # "represented with a cross."
 
 
 class UI(QDialog):
@@ -100,6 +115,15 @@ class UI(QDialog):
         speakers = np.unique([u.speaker_name for u in utterances])
         colors = {speaker_name: colormap[i] for i, speaker_name in enumerate(speakers)}
         embeds = [u.embed for u in utterances]
+        emotion_markers = {
+            "calm": "$C$",
+            "happy": "$H$",
+            "sad": "$S$",
+            "angry": "$A$",
+            "fearful": "$F$",
+            "disgust": "$D$",
+            "surprised": "$Z$"
+        }
 
         # Display a message if there aren't enough points
         if len(utterances) < self.min_umap_points:
@@ -115,18 +139,25 @@ class UI(QDialog):
                     "Drawing UMAP projections for the first time, this will take a few seconds.")
                 self.umap_hot = True
 
-            reducer = umap.UMAP(int(np.ceil(np.sqrt(len(embeds)))), metric="cosine")
+            reducer = umap.UMAP(int(np.ceil(np.sqrt(len(embeds)))), metric="cosine", random_state=42)
             projections = reducer.fit_transform(embeds)
 
             speakers_done = set()
             for projection, utterance in zip(projections, utterances):
                 color = colors[utterance.speaker_name]
-                mark = "x" if "_gen_" in utterance.name else "o"
+                # filename = os.path.basename(utterance.name)
+                emotion = utterance.name.replace(".wav", "").split("_")[-1]
+                mark = emotion_markers.get(emotion, "x" if "_gen_" in utterance.name else "o")
+                # mark = "x" if "_gen_" in utterance.name else "o"
                 label = None if utterance.speaker_name in speakers_done else utterance.speaker_name
                 speakers_done.add(utterance.speaker_name)
                 self.umap_ax.scatter(projection[0], projection[1], c=[color], marker=mark,
                                      label=label)
-            self.umap_ax.legend(prop={'size': 10})
+            legend_elements = [
+                Line2D([0], [0], color=colormap[i], lw=0, label=speaker, marker="o")
+                for i, speaker in enumerate(speakers)
+            ]
+            self.umap_ax.legend(handles=legend_elements, prop={'size': 6})
 
         # Draw the plot
         self.umap_ax.set_aspect("equal", "datalim")
@@ -483,10 +514,14 @@ class UI(QDialog):
         browser_layout.addWidget(self.random_speaker_button, i, 1)
         self.random_utterance_button = QPushButton("Random")
         browser_layout.addWidget(self.random_utterance_button, i, 2)
+        self.browser_load_speaker_button = QPushButton("Load speaker")
+        browser_layout.addWidget(self.browser_load_speaker_button, i, 3)
         self.auto_next_checkbox = QCheckBox("Auto select next")
         self.auto_next_checkbox.setChecked(True)
-        browser_layout.addWidget(self.auto_next_checkbox, i, 3)
-        i += 1
+        browser_layout.addWidget(self.auto_next_checkbox, i+1, 0)
+        self.browser_load_all_button = QPushButton("Load all")
+        browser_layout.addWidget(self.browser_load_all_button, i+1, 3)
+        i += 2
 
         # Utterance box
         browser_layout.addWidget(QLabel("<b>Use embedding from:</b>"), i, 0)

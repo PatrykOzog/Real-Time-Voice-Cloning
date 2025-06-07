@@ -359,6 +359,7 @@ class Tacotron(nn.Module):
         self.decoder.r = self.decoder.r.new_tensor(value, requires_grad=False)
 
     def forward(self, x, m, speaker_embedding):
+        print("Model parameters:", list(self.parameters()))
         device = next(self.parameters()).device  # use same device as parameters
 
         self.step += 1

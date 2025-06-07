@@ -60,6 +60,8 @@ def train(run_id: str, syn_dir: Path, models_dir: Path, save_every: int,  backup
                 raise ValueError("`batch_size` must be evenly divisible by n_gpus!")
     else:
         device = torch.device("cpu")
+
+    # device = torch.device("cpu")    
     print("Using device:", device)
 
     # Instantiate Tacotron Model
@@ -111,6 +113,7 @@ def train(run_id: str, syn_dir: Path, models_dir: Path, save_every: int,  backup
         current_step = model.get_step()
 
         r, lr, max_step, batch_size = session
+        # batch_size = 6
 
         training_steps = max_step - current_step
 
