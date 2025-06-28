@@ -20,21 +20,29 @@
       padding: 10px;
     }
     .sample {
-      margin-bottom: 20px;
+      flex: 1;
+      min-width: 200px;
     }
     audio {
       width: 100%;
+    }
+    .sample-pair {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
     }
   </style>
 </head>
 <body>
   <h1>🔊 Voice Samples</h1>
-  <p style="text-align:center;">Compare different synthesized speech samples from two models.</p>
+  <p style="text-align:center;">Compare different synthesized speech samples.</p>
 
   <div class="grid">
     <!-- Column 1 -->
     <div class="column">
-      <h2>300k–350k Steps</h2>
+      <h2>Synthesizer training</h2>
 
       <div class="sample">
         <h4>Step 300,000</h4>
@@ -80,9 +88,10 @@
     </div>
 
     <!-- Column 2 -->
-    <div class="column">
-      <h2>1271k Model Samples</h2>
-
+  <div class="column">
+    <h2>Vocoder training</h2>
+  
+    <div class="sample-pair">
       <div class="sample">
         <h4>1 - Gen</h4>
         <audio controls>
@@ -95,7 +104,9 @@
           <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_1_target.wav" type="audio/wav">
         </audio>
       </div>
-
+    </div>
+  
+    <div class="sample-pair">
       <div class="sample">
         <h4>2 - Gen</h4>
         <audio controls>
@@ -108,7 +119,9 @@
           <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_2_target.wav" type="audio/wav">
         </audio>
       </div>
-
+    </div>
+  
+    <div class="sample-pair">
       <div class="sample">
         <h4>3 - Gen</h4>
         <audio controls>
@@ -121,7 +134,9 @@
           <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_3_target.wav" type="audio/wav">
         </audio>
       </div>
-
+    </div>
+  
+    <div class="sample-pair">
       <div class="sample">
         <h4>4 - Gen</h4>
         <audio controls>
@@ -134,7 +149,9 @@
           <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_4_target.wav" type="audio/wav">
         </audio>
       </div>
-
+    </div>
+  
+    <div class="sample-pair">
       <div class="sample">
         <h4>5 - Gen</h4>
         <audio controls>
@@ -149,5 +166,6 @@
       </div>
     </div>
   </div>
+
 </body>
 </html>
