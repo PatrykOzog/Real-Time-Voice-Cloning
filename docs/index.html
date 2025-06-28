@@ -3,45 +3,151 @@
 <head>
   <meta charset="UTF-8">
   <title>Voice Samples</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+    .column {
+      padding: 10px;
+    }
+    .sample {
+      margin-bottom: 20px;
+    }
+    audio {
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
   <h1>🔊 Voice Samples</h1>
-  <p>Listen to synthesized speech samples at various training steps.</p>
+  <p style="text-align:center;">Compare different synthesized speech samples from two models.</p>
 
-  <h3>Step 300,000</h3>
-  <audio controls>
-    <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/step-300000-wave-from-mel_sample_1.wav" type="audio/wav">
-    Your browser does not support the audio element.
-  </audio>
+  <div class="grid">
+    <!-- Column 1 -->
+    <div class="column">
+      <h2>300k–350k Steps</h2>
 
-  <h3>Step 310,000</h3>
-  <audio controls>
-    <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/step-310000-wave-from-mel_sample_1.wav" type="audio/wav">
-    Your browser does not support the audio element.
-  </audio>
+      <div class="sample">
+        <h4>Step 300,000</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/step-300000-wave-from-mel_sample_1.wav" type="audio/wav">
+        </audio>
+      </div>
 
-  <h3>Step 320,000</h3>
-  <audio controls>
-    <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/step-320000-wave-from-mel_sample_1.wav" type="audio/wav">
-    Your browser does not support the audio element.
-  </audio>
+      <div class="sample">
+        <h4>Step 310,000</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/step-310000-wave-from-mel_sample_1.wav" type="audio/wav">
+        </audio>
+      </div>
 
-  <h3>Step 330,000</h3>
-  <audio controls>
-    <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/step-330000-wave-from-mel_sample_1.wav" type="audio/wav">
-    Your browser does not support the audio element.
-  </audio>
+      <div class="sample">
+        <h4>Step 320,000</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/step-320000-wave-from-mel_sample_1.wav" type="audio/wav">
+        </audio>
+      </div>
 
-  <h3>Step 340,000</h3>
-  <audio controls>
-    <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/step-340000-wave-from-mel_sample_1.wav" type="audio/wav">
-    Your browser does not support the audio element.
-  </audio>
+      <div class="sample">
+        <h4>Step 330,000</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/step-330000-wave-from-mel_sample_1.wav" type="audio/wav">
+        </audio>
+      </div>
 
-  <h3>Step 350,000</h3>
-  <audio controls>
-    <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/step-350000-wave-from-mel_sample_1.wav" type="audio/wav">
-    Your browser does not support the audio element.
-  </audio>
+      <div class="sample">
+        <h4>Step 340,000</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/step-340000-wave-from-mel_sample_1.wav" type="audio/wav">
+        </audio>
+      </div>
+
+      <div class="sample">
+        <h4>Step 350,000</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/step-350000-wave-from-mel_sample_1.wav" type="audio/wav">
+        </audio>
+      </div>
+    </div>
+
+    <!-- Column 2 -->
+    <div class="column">
+      <h2>1271k Model Samples</h2>
+
+      <div class="sample">
+        <h4>1 - Gen</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_1_gen_batched_target8000_overlap400.wav" type="audio/wav">
+        </audio>
+      </div>
+      <div class="sample">
+        <h4>1 - Target</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_1_target.wav" type="audio/wav">
+        </audio>
+      </div>
+
+      <div class="sample">
+        <h4>2 - Gen</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_2_gen_batched_target8000_overlap400.wav" type="audio/wav">
+        </audio>
+      </div>
+      <div class="sample">
+        <h4>2 - Target</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_2_target.wav" type="audio/wav">
+        </audio>
+      </div>
+
+      <div class="sample">
+        <h4>3 - Gen</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_3_gen_batched_target8000_overlap400.wav" type="audio/wav">
+        </audio>
+      </div>
+      <div class="sample">
+        <h4>3 - Target</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_3_target.wav" type="audio/wav">
+        </audio>
+      </div>
+
+      <div class="sample">
+        <h4>4 - Gen</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_4_gen_batched_target8000_overlap400.wav" type="audio/wav">
+        </audio>
+      </div>
+      <div class="sample">
+        <h4>4 - Target</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_4_target.wav" type="audio/wav">
+        </audio>
+      </div>
+
+      <div class="sample">
+        <h4>5 - Gen</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_5_gen_batched_target8000_overlap400.wav" type="audio/wav">
+        </audio>
+      </div>
+      <div class="sample">
+        <h4>5 - Target</h4>
+        <audio controls>
+          <source src="https://github.com/PatrykOzog/Real-Time-Voice-Cloning/raw/master/waveforms/1271k_steps_5_target.wav" type="audio/wav">
+        </audio>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
